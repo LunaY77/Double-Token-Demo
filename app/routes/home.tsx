@@ -1,5 +1,8 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import LoginButton from "~/auth/LoginButton";
+const queryClient = new QueryClient();
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,5 +12,9 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LoginButton />
+    </QueryClientProvider>
+  )
 }
