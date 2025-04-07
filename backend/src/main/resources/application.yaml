@@ -1,0 +1,29 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: DoubleToken
+  datasource:
+    url: jdbc:mysql://localhost:3180/DoubleToken?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000   #不能小于30秒，否则默认回到1800秒
+      connection-test-query: SELECT 1
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  data:
+    redis:
+      # Redis服务器地址
+      host: localhost
+      # Redis服务器端口号
+      port: 6777
+      # 使用的数据库索引，默认是0
+      database: 0
+      # 连接超时时间
+      timeout: 1800000
