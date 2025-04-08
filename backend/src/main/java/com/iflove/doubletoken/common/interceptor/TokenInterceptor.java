@@ -8,6 +8,8 @@ import com.iflove.doubletoken.common.utils.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,6 +17,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
+@Order(0)
 public class TokenInterceptor implements HandlerInterceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -23,6 +26,9 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            return true;
+        }
         // 判断是否是公共方法
         if (isPublicURI(request.getRequestURI())) {
             return true;

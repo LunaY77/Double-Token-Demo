@@ -20,6 +20,7 @@ import java.util.Optional;
  */
 @Component
 @Slf4j
+@Order(1)
 public class CollectorInterceptor implements HandlerInterceptor {
 
     @Override
