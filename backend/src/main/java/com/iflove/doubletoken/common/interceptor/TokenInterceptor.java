@@ -33,14 +33,14 @@ public class TokenInterceptor implements HandlerInterceptor {
         // 如果为空或不是 Bearer 令牌
         if (Objects.isNull(accessToken) || !accessToken.startsWith(AUTHORIZATION_SCHEMA)) {
             log.error("token is null or not start with 'Bearer'");
-            throw new UnauthorizedException(CommonErrorEnum.TOKEN_INVALID);
+            throw new UnauthorizedException(CommonErrorEnum.ACCESS_TOKEN_INVALID);
         }
         log.debug("accessToken:{}", accessToken);
         RequestInfo requestInfo = JWTUtil.parseJwtToken(accessToken);
         // 解析失败
         if (Objects.isNull(requestInfo)) {
             log.error("token is invalid");
-            throw new UnauthorizedException(CommonErrorEnum.TOKEN_INVALID);
+            throw new UnauthorizedException(CommonErrorEnum.ACCESS_TOKEN_INVALID);
         }
         log.debug("userId:{}, username:{}", requestInfo.getUserId(), requestInfo.getName());
         // 将用户信息存入 request 中

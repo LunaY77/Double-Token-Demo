@@ -7,7 +7,6 @@ import com.iflove.doubletoken.common.constant.RedisKey;
 import com.iflove.doubletoken.common.domain.dto.RequestInfo;
 import com.iflove.doubletoken.common.exception.BusinessException;
 import com.iflove.doubletoken.common.exception.CommonErrorEnum;
-import com.iflove.doubletoken.common.exception.UnauthorizedException;
 import com.iflove.doubletoken.common.utils.JWTUtil;
 import com.iflove.doubletoken.common.utils.RedisUtils;
 import com.iflove.doubletoken.domain.entity.User;
@@ -95,13 +94,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public String refreshToken(String refreshToken) {
         // 1. 判断 refreshToken 是否存在
         if (Objects.isNull(refreshToken)) {
-            throw new UnauthorizedException(CommonErrorEnum.TOKEN_INVALID);
+            throw new BusinessException(CommonErrorEnum.REFRESH_TOKEN_INVALID);
         }
         // 2. 从redis中获取 requestInfo
         RequestInfo requestInfo = RedisUtils.get(RedisKey.getKey(RedisKey.REFRESH_TOKEN, refreshToken), RequestInfo.class);
         // 3. 判断 requestInfo 是否存在
         if (Objects.isNull(requestInfo)) {
-            throw new UnauthorizedException(CommonErrorEnum.TOKEN_INVALID);
+            throw new BusinessException(CommonErrorEnum.REFRESH_TOKEN_INVALID);
         }
         // 4. 生成新的 accessToken
         String accessToken = JWTUtil.generateAccessToken(requestInfo);
