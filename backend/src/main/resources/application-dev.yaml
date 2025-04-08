@@ -1,0 +1,12 @@
+DoubleToken:
+  # mysql
+  mysql:
+    ip: localhost
+    port: 3180
+    db: DoubleToken
+    username: root
+    password: 123456
+  # redis
+  redis:
+    host: localhost
+    port: 6777

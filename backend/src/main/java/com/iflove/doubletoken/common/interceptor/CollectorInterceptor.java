@@ -1,4 +1,4 @@
-package com.iflove.doubletoken.common.config.interceptor;
+package com.iflove.doubletoken.common.interceptor;
 
 import cn.hutool.core.convert.NumberWithFormat;
 import cn.hutool.jwt.JWTUtil;
@@ -11,23 +11,22 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Optional;
+
 /**
  * @author 苍镜月
  * @version 1.0
  * @implNote 信息收集拦截器
  */
 @Component
-@Order(1)
 @Slf4j
 public class CollectorInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        RequestInfo info = new RequestInfo();
-        String token = request.getHeader("Authorization").substring(7);
-        Long uid = ((NumberWithFormat) JWTUtil.parseToken(token).getPayload("uid")).longValue();
-
-        RequestHolder.set(info);
+        // 收集请求信息
+        RequestInfo requestInfo = (RequestInfo) request.getAttribute(TokenInterceptor.ATTRIBUTE_USER_INFO);
+        RequestHolder.set(requestInfo);
         return true;
     }
 

@@ -2,12 +2,14 @@ server:
   port: 8082
 
 spring:
+  profiles:
+    active: dev
   application:
     name: DoubleToken
   datasource:
-    url: jdbc:mysql://localhost:3180/DoubleToken?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: 123456
+    url: jdbc:mysql://${DoubleToken.mysql.ip}:${DoubleToken.mysql.port}/${DoubleToken.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: ${DoubleToken.mysql.username}
+    password: ${DoubleToken.mysql.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       minimum-idle: 3
@@ -20,9 +22,9 @@ spring:
   data:
     redis:
       # Redis服务器地址
-      host: localhost
+      host: ${DoubleToken.redis.host}
       # Redis服务器端口号
-      port: 6777
+      port: ${DoubleToken.redis.port}
       # 使用的数据库索引，默认是0
       database: 0
       # 连接超时时间

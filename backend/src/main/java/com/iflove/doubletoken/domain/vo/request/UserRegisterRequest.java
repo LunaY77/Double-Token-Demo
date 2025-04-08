@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "用户注册请求", description = "用户注册请求")
+@Schema(description = "用户注册请求")
 public class UserRegisterRequest {
 
     @NotBlank(message = "用户名不能为空")

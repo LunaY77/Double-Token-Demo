@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: DoubleTokenMysql
+    ports:
+      - 3180:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/mysql/data:/var/lib/mysql
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/mysql/logs:/var/log/mysql
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/mysql/conf:/etc/mysql/conf
+    restart: unless-stopped
+
+  redis:
+    image: redis
+    container_name: DoubleTokenRedis
+    ports:
+      - 6777:6379
+    restart: unless-stopped

@@ -12,11 +12,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(description = "用户登录请求")
 public class UserLoginRequest {
 
     @NotNull
-    @Schema(description = "登录的用户ID")
-    private String userId;
+    @Schema(description = "登录的用户名")
+    private String userName;
 
     @NotNull
     @Schema(description = "登录的用户密码")

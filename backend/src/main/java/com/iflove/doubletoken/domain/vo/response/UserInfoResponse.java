@@ -11,20 +11,14 @@ import lombok.Data;
  */
 
 @Data
-@Schema(description = "用户登录信息")
+@Schema(description = "用户信息")
 @Builder
-public class LoginInfoResponse {
+public class UserInfoResponse {
 
     @Schema(description = "用户id")
     private Long id;
 
     @Schema(description = "用户名")
     private String name;
-
-    @Schema(description = "access_token")
-    private String accessToken;
-
-    @Schema(description = "refresh_token")
-    private String refreshToken;
 
 }
