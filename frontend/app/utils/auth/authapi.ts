@@ -1,7 +1,7 @@
 import type { LoginCredentials, RegisterCredentials } from "../../types/authtype";
 
 export async function loginUser(credentials: LoginCredentials) {
-  const response = await fetch('/api/login', {
+  const response = await fetch('/capi/user/public/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export async function loginUser(credentials: LoginCredentials) {
 }
 
 export async function registerUser(credentials: RegisterCredentials) {
-  const response = await fetch('/api/register', {
+  const response = await fetch('/capi/user/public/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
-import { useMutation } from "@tanstack/react-query";
+// import { useMutation } from "@tanstack/react-query";
 
 export async function refreshToken() {
-    const response = await fetch('http://localhost:8080/api/user/refresh', {
+    const response = await fetch('/capi/user/public/refreshToken', {
       method: 'GET',
       credentials: 'include',
     });
@@ -13,16 +13,16 @@ export async function refreshToken() {
     return data;
   }
   
-export const useRefreshMutation = () => {
-  return useMutation({
-    mutationFn: refreshToken,
-    onSuccess: (data) => {
-      if (data.accessToken) {
-        localStorage.setItem("accessToken", data.accessToken);
-      }
-    },
-    onError: () => {
-      localStorage.removeItem("accessToken");
-    }
-  });
-};
+// export const useRefreshMutation = () => {
+//   return useMutation({
+//     mutationFn: refreshToken,
+//     onSuccess: (data) => {
+//       if (data.accessToken) {
+//         localStorage.setItem("accessToken", data.accessToken);
+//       }
+//     },
+//     onError: () => {
+//       localStorage.removeItem("accessToken");
+//     }
+//   });
+// };
