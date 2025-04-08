@@ -1,7 +1,7 @@
 // import { useMutation } from "@tanstack/react-query";
 
 export async function refreshToken() {
-    const response = await fetch('/capi/user/public/refreshToken', {
+    const response = await fetch('http://localhost:8082/capi/user/public/refreshToken', {
       method: 'GET',
       credentials: 'include',
     });

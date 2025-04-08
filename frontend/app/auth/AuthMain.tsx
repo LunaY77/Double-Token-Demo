@@ -151,14 +151,14 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
   // 修改退出登录函数
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:8082/api/user/logout", {
+      const response = await fetch("http://localhost:8082/capi/user/logout/user/logout", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+          "Authorization": `${localStorage.getItem("accessToken")}`,
           "Content-Type": "application/json",
         },
         credentials: "include",
-        mode: "cors"  // 明确指定跨域模式
+        mode: "cors",
       });
 
       if (response.ok) {

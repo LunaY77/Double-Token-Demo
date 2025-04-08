@@ -13,7 +13,7 @@ export async function fetchWithAuth(url: string, options: FetchOptions = {}) {
     ...options,
     headers: {
       ...options.headers,
-      'Authorization': `Bearer ${accessToken}`,
+      'Authorization': `${accessToken}`,
       'Content-Type': 'application/json',
     },
     credentials: 'include',
