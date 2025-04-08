@@ -71,12 +71,12 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (res) => {
-      if (res.data) {
-        localStorage.setItem("token", res.data);
+      if (res.accessToken) {
+        // 不需要手动存储 refreshToken，因为它在 cookie 中
+        localStorage.setItem("accessToken", res.accessToken);
         showTemporaryMessage("登录成功！", "success");
         setTimeout(handleSuccessAndClose, 1000);
-      }
-      else {
+      } else {
         showTemporaryMessage("登录失败：未获取到有效的令牌", "error");
       }
     },
@@ -148,9 +148,9 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
     }
   };
 
-  // 添加退出登录函数
-  const handleLogout = () => {
-    localStorage.removeItem("token");
+  // 修改退出登录函数
+  const handleLogout = async () => {
+    localStorage.removeItem("accessToken");
     queryClient.invalidateQueries({ queryKey: ["authStatus"] });
     showTemporaryMessage("已成功退出登录", "success");
     setTimeout(handleSuccessAndClose, 1000);

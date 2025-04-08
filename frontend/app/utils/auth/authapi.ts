@@ -10,6 +10,8 @@ export async function loginUser(credentials: LoginCredentials) {
       userId: credentials.username,
       password: credentials.password,
     }),
+    // 确保包含凭证以接收 cookies
+    credentials: 'include',
   });
 
   const data = await response.json();
@@ -40,6 +42,7 @@ export async function registerUser(credentials: RegisterCredentials) {
   return data;
 }
 
+
 export async function checkAuthStatus() {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -47,3 +50,4 @@ export async function checkAuthStatus() {
   }
   return { isLoggedIn: true, token };
 }
+
