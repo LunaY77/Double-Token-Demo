@@ -24,7 +24,4 @@ public class LoginInfoResponse {
     @Schema(description = "access_token")
     private String accessToken;
 
-    @Schema(description = "refresh_token")
-    private String refreshToken;
-
 }

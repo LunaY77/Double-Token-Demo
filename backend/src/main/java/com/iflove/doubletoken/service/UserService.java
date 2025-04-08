@@ -5,6 +5,7 @@ import com.iflove.doubletoken.domain.entity.User;
 import com.iflove.doubletoken.domain.vo.request.UserLoginRequest;
 import com.iflove.doubletoken.domain.vo.request.UserRegisterRequest;
 import com.iflove.doubletoken.domain.vo.response.LoginInfoResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author cangjingyue
@@ -16,7 +17,7 @@ public interface UserService extends IService<User> {
     void register(UserRegisterRequest registerRequest);
 
     // 修改login方法签名
-    LoginInfoResponse login(UserLoginRequest userLoginRequest);
+    LoginInfoResponse login(UserLoginRequest userLoginRequest, HttpServletResponse response);
     
     // 修改refreshToken方法签名
     String refreshToken(String refreshToken);

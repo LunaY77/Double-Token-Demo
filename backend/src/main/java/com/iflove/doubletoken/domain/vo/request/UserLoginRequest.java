@@ -17,7 +17,7 @@ public class UserLoginRequest {
 
     @NotNull
     @Schema(description = "登录的用户名")
-    private String userName;
+    private String username;
 
     @NotNull
     @Schema(description = "登录的用户密码")

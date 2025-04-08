@@ -15,6 +15,8 @@ public enum CommonErrorEnum implements ErrorEnum {
     TOKEN_INVALID(401, "token无效"),
     USER_NOT_FOUND(505, "用户不存在"),
     USER_PASSWORD_ERROR(506, "用户名或密码错误"),
+    USER_NAME_EXITS(507, "用户名已存在"),
+    REGISTER_ERROR(508, "注册失败"),
     ;
     private final Integer code;
     private final String msg;

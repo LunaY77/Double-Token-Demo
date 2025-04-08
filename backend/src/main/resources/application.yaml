@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: pro
   application:
     name: DoubleToken
   datasource:
@@ -29,3 +29,4 @@ spring:
       database: 0
       # 连接超时时间
       timeout: 1800000
+      password: ${DoubleToken.redis.password}
