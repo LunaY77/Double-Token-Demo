@@ -158,7 +158,6 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
           "Content-Type": "application/json",
         },
         credentials: "include",
-        mode: "cors",
       });
 
       if (response.ok) {
