@@ -22,15 +22,8 @@ export async function fetchWithAuth(url: string, options: FetchOptions = {}) {
   try {
     const response = await fetch(url, fetchOptions);
     
-    // 先检查 HTTP 状态码
-    if (!response.ok) {
-      throw new Error(`请求失败: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    // 检查业务状态码
-    if (data.code === 401 && options.retry !== false) {
+    // 检查 HTTP 401 状态码
+    if (response.status === 401 && options.retry !== false) {
       try {
         // 尝试刷新 token
         const refreshResponse = await refreshToken();
@@ -43,11 +36,17 @@ export async function fetchWithAuth(url: string, options: FetchOptions = {}) {
             });
         }
       } catch (error) {
-        // 刷新失败，清除 token
         localStorage.removeItem('accessToken');
         throw new Error('认证已过期，请重新登录');
       }
     }
+
+    // 检查其他错误状态码
+    if (!response.ok) {
+      throw new Error(`请求失败: ${response.status}`);
+    }
+
+    const data = await response.json();
 
     return data;
   } catch (error) {

@@ -1,7 +1,7 @@
 import type { LoginCredentials, RegisterCredentials } from "../../types/authtype";
 
 export async function loginUser(credentials: LoginCredentials) {
-  const response = await fetch('/capi/user/public/login', {
+  const response = await fetch('http://localhost:8082/capi/user/public/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -23,9 +23,10 @@ export async function loginUser(credentials: LoginCredentials) {
 }
 
 export async function registerUser(credentials: RegisterCredentials) {
-  const response = await fetch('/capi/user/public/register', {
+  const response = await fetch('http://localhost:8082/capi/user/public/register', {
     method: 'POST',
     headers: {
+      'Authorization': "Bearer 10001",
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -35,7 +36,7 @@ export async function registerUser(credentials: RegisterCredentials) {
   });
 
   const data = await response.json();
-  if (!data.success) {
+  if (data.code !== 200) {
     throw new Error(data.errMsg || "注册失败");
   }
 

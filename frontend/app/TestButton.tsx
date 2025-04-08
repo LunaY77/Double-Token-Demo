@@ -11,12 +11,13 @@ interface UserInfoResponse {
 }
 
 export default function Test() {
-    const { data: response, isLoading, refetch } = useQuery<UserInfoResponse>({
+    const { data: response, isLoading, refetch, error } = useQuery<UserInfoResponse>({
         queryKey: ['user-info'],
         queryFn: () => fetchWithAuth('/capi/user/info/me', {
             method: 'GET'
         }),
-        enabled: false
+        enabled: false,
+        retry: 1,
     })
 
     return (
@@ -27,6 +28,11 @@ export default function Test() {
             >
                 {isLoading ? '加载中...' : '获取用户信息'}
             </button>
+            {error && (
+                <div className="mt-4 text-red-500">
+                    Error: {(error as Error).message}
+                </div>
+            )}
             {response && (
                 <div className="mt-4 space-y-2">
                     <div>状态码: {response.code}</div>

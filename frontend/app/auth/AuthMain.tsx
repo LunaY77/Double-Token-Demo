@@ -92,9 +92,9 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
   const registerMutation = useMutation({
     mutationFn: registerUser,
     onSuccess: (res) => {
-      if (res.success && res.data) {
-        // 保存注册返回的userId和密码
-        const userId = res.data;
+      if (res.code === 200) {
+        // 保存注册返回的username和密码
+        const registeredUsername = username;  // 使用输入的 username
         const registeredPassword = password;
 
         // 清空表单
@@ -110,13 +110,13 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
 
         // 自动填充用户名和密码
         setTimeout(() => {
-          setUsername(userId); // 使用返回的userId
+          setUsername(registeredUsername);  // 使用注册时的 username
           setPassword(registeredPassword);
 
           // 再延迟一会自动登录
           setTimeout(() => {
             loginMutation.mutate({
-              username: userId, // 使用userId进行登录
+              username: registeredUsername,  // 使用 username 进行登录
               password: registeredPassword,
             });
           }, 1000);
