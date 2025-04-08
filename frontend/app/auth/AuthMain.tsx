@@ -71,9 +71,9 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (res) => {
-      if (res.accessToken) {
+      if (res.data.accessToken) {
         // 不需要手动存储 refreshToken，因为它在 cookie 中
-        localStorage.setItem("accessToken", res.accessToken);
+        localStorage.setItem("accessToken", res.data.accessToken);
         showTemporaryMessage("登录成功！", "success");
         setTimeout(handleSuccessAndClose, 1000);
       } else {
@@ -150,10 +150,30 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
 
   // 修改退出登录函数
   const handleLogout = async () => {
-    localStorage.removeItem("accessToken");
-    queryClient.invalidateQueries({ queryKey: ["authStatus"] });
-    showTemporaryMessage("已成功退出登录", "success");
-    setTimeout(handleSuccessAndClose, 1000);
+    try {
+      const response = await fetch("http://localhost:8082/api/user/logout", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        mode: "cors"  // 明确指定跨域模式
+      });
+
+      if (response.ok) {
+        // 清除前端存储的 AccessToken
+        localStorage.removeItem("accessToken");
+        // 使 React Query 缓存失效
+        queryClient.invalidateQueries({ queryKey: ["authStatus"] });
+        showTemporaryMessage("已成功退出登录", "success");
+        setTimeout(handleSuccessAndClose, 1000);
+      } else {
+        throw new Error("退出登录失败");
+      }
+    } catch (error) {
+      showTemporaryMessage("退出登录失败，请重试", "error");
+    }
   };
 
   return (

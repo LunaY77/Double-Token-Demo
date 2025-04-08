@@ -1,25 +1,30 @@
 import type { LoginCredentials, RegisterCredentials } from "../../types/authtype";
 
 export async function loginUser(credentials: LoginCredentials) {
-  const response = await fetch('http://localhost:8082/capi/user/public/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      userId: credentials.username,
-      password: credentials.password,
-    }),
-    // 确保包含凭证以接收 cookies
-    credentials: 'include',
-  });
+  try {
+    const response = await fetch('http://localhost:8082/capi/user/public/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: credentials.username,
+        password: credentials.password,
+      }),
+    });
 
-  const data = await response.json();
-  if (!data.success) {
-    throw new Error(data.errMsg || "登录失败");
+    const data = await response.json();
+    if (data.code !== 200) {
+      throw new Error(data.message || "登录失败");
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      throw new Error('无法连接到服务器，请检查服务器是否正在运行');
+    }
+    throw error;
   }
-
-  return data;
 }
 
 export async function registerUser(credentials: RegisterCredentials) {
@@ -45,7 +50,7 @@ export async function registerUser(credentials: RegisterCredentials) {
 
 
 export async function checkAuthStatus() {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   if (!token) {
     return { isLoggedIn: false };
   }

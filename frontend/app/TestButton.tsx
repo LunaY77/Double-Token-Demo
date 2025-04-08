@@ -13,7 +13,7 @@ interface UserInfoResponse {
 export default function Test() {
     const { data: response, isLoading, refetch, error } = useQuery<UserInfoResponse>({
         queryKey: ['user-info'],
-        queryFn: () => fetchWithAuth('/capi/user/info/me', {
+        queryFn: () => fetchWithAuth('http://localhost:8082/capi/user/info/me', {
             method: 'GET'
         }),
         enabled: false,
