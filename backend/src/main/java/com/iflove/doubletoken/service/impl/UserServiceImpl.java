@@ -16,6 +16,8 @@ import com.iflove.doubletoken.domain.vo.request.UserRegisterRequest;
 import com.iflove.doubletoken.domain.vo.response.LoginInfoResponse;
 import com.iflove.doubletoken.mapper.UserMapper;
 import com.iflove.doubletoken.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +38,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void register(UserRegisterRequest registerRequest) {
         // 检查用户名是否已存在
         if (lambdaQuery().eq(User::getName, registerRequest.getUsername()).count() > 0) {
-            throw new RuntimeException("用户名已存在");
+            throw new BusinessException(CommonErrorEnum.USER_NAME_EXITS);
         }
 
         // 创建用户实体
@@ -47,14 +49,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 保存到数据库
         if (!save(user)) {
-            throw new RuntimeException("用户注册失败");
+            throw new BusinessException(CommonErrorEnum.REGISTER_ERROR);
         }
     }
 
     @Override
-    public LoginInfoResponse login(UserLoginRequest userLoginRequest) {
+    public LoginInfoResponse login(UserLoginRequest userLoginRequest, HttpServletResponse response) {
         // 1. 用户验证逻辑
-        User user = lambdaQuery().eq(User::getName, userLoginRequest.getUserName()).one();
+        User user = lambdaQuery().eq(User::getName, userLoginRequest.getUsername()).one();
         // 1.1 用户不存在
         if (Objects.isNull(user)) {
             throw new BusinessException(CommonErrorEnum.USER_NOT_FOUND);
@@ -73,14 +75,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String accessToken = JWTUtil.generateAccessToken(requestInfo);
         // 2.2 refreshToken
         String refreshTokenKey = String.valueOf(UUID.randomUUID());
+        // 2.3 存入 redis
         RedisUtils.set(RedisKey.getKey(RedisKey.REFRESH_TOKEN, refreshTokenKey), requestInfo, Const.REFRESH_TOKEN_EXPIRE_TIME, TimeUnit.MILLISECONDS);
+        // 2.4 写入 cookie
+        Cookie cookie = new Cookie(Const.REFRESH_TOKEN_COOKIE_NAME, refreshTokenKey);
+        cookie.setHttpOnly(true); // 防止通过js获取cookie
+        cookie.setMaxAge((int) (Const.REFRESH_TOKEN_EXPIRE_TIME / 1000)); // 毫秒转秒
+        response.addCookie(cookie);
 
         // 3. 返回登录信息
         return LoginInfoResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .accessToken(accessToken)
-                .refreshToken(refreshTokenKey)
                 .build();
     }
 

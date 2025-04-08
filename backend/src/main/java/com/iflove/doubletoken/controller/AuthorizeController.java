@@ -9,6 +9,7 @@ import com.iflove.doubletoken.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,8 @@ public class AuthorizeController {
 
     @PostMapping("/login")
     @Operation(summary = "用户登录", description = "用户登录接口")
-    public RestBean<LoginInfoResponse> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
-        return RestBean.success(userService.login(userLoginRequest));
+    public RestBean<LoginInfoResponse> login(@RequestBody @Valid UserLoginRequest userLoginRequest, HttpServletResponse response) {
+        return RestBean.success(userService.login(userLoginRequest, response));
     }
 
     @GetMapping("/refreshToken")
