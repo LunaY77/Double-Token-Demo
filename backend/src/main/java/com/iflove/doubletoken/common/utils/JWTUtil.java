@@ -4,9 +4,7 @@ import com.iflove.doubletoken.common.constant.Const;
 import com.iflove.doubletoken.common.domain.dto.RequestInfo;
 import com.iflove.doubletoken.common.exception.CommonErrorEnum;
 import com.iflove.doubletoken.common.exception.UnauthorizedException;
-import com.iflove.doubletoken.domain.entity.User;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +66,7 @@ public class JWTUtil {
                         .build();
             } catch (Exception ex) {
                 log.warn("JWT Token解析失败，请检查", ex);
-                throw new UnauthorizedException(CommonErrorEnum.TOKEN_INVALID);
+                throw new UnauthorizedException(CommonErrorEnum.ACCESS_TOKEN_INVALID);
             }
         }
         return null;

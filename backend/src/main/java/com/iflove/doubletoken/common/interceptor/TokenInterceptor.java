@@ -8,6 +8,8 @@ import com.iflove.doubletoken.common.utils.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,6 +17,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
+@Order(0)
 public class TokenInterceptor implements HandlerInterceptor {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -23,6 +26,11 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 放行预检请求
+        if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            log.debug("{}", request.getCookies());
+            return true;
+        }
         // 判断是否是公共方法
         if (isPublicURI(request.getRequestURI())) {
             return true;
@@ -33,14 +41,14 @@ public class TokenInterceptor implements HandlerInterceptor {
         // 如果为空或不是 Bearer 令牌
         if (Objects.isNull(accessToken) || !accessToken.startsWith(AUTHORIZATION_SCHEMA)) {
             log.error("token is null or not start with 'Bearer'");
-            throw new UnauthorizedException(CommonErrorEnum.TOKEN_INVALID);
+            throw new UnauthorizedException(CommonErrorEnum.ACCESS_TOKEN_INVALID);
         }
         log.debug("accessToken:{}", accessToken);
         RequestInfo requestInfo = JWTUtil.parseJwtToken(accessToken);
         // 解析失败
         if (Objects.isNull(requestInfo)) {
             log.error("token is invalid");
-            throw new UnauthorizedException(CommonErrorEnum.TOKEN_INVALID);
+            throw new UnauthorizedException(CommonErrorEnum.ACCESS_TOKEN_INVALID);
         }
         log.debug("userId:{}, username:{}", requestInfo.getUserId(), requestInfo.getName());
         // 将用户信息存入 request 中

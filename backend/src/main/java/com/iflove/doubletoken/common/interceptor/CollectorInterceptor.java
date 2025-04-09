@@ -20,10 +20,12 @@ import java.util.Optional;
  */
 @Component
 @Slf4j
+@Order(1)
 public class CollectorInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        log.debug("{}", request.getCookies());
         // 收集请求信息
         RequestInfo requestInfo = (RequestInfo) request.getAttribute(TokenInterceptor.ATTRIBUTE_USER_INFO);
         RequestHolder.set(requestInfo);
