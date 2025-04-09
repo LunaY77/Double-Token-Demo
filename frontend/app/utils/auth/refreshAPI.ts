@@ -1,18 +1,28 @@
 // import { useMutation } from "@tanstack/react-query";
 
 export async function refreshToken() {
-    const response = await fetch('http://localhost:8082/capi/user/public/refreshToken', {
-      method: 'GET',
-      credentials: 'include',
-    });
-  
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || "Token 刷新失败");
+    try {
+      const response = await fetch('http://localhost:8082/capi/user/public/refreshToken', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+    
+      const data = await response.json();
+      
+      if (!response.ok) {
+        console.error('Refresh token error:', data);
+        throw new Error(data.message || `刷新Token失败: ${response.status}`);
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Refresh token request failed:', error);
+      throw error;
     }
-    return data;
-  }
-  
+}
 // export const useRefreshMutation = () => {
 //   return useMutation({
 //     mutationFn: refreshToken,

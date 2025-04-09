@@ -6,6 +6,7 @@ import { AlertMessage } from "./AlertMessage";
 import { LoggedInView } from "./LoggedInView";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
+import { fetchWithAuth } from "~/utils/auth/fetchWithAuth";
 
 const queryClient = new QueryClient();
 
@@ -151,12 +152,8 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
   // 修改退出登录函数
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:8082/capi/user/logout", {
+      const response = await fetchWithAuth("http://localhost:8082/capi/user/logout", {
         method: "GET",  // 改为 GET 请求
-        headers: {
-          "Authorization": `${localStorage.getItem("accessToken")}`,
-          "Content-Type": "application/json",
-        },
         credentials: "include",
       });
 
