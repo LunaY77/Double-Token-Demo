@@ -80,6 +80,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Cookie cookie = new Cookie(Const.REFRESH_TOKEN_COOKIE_NAME, refreshTokenKey);
         cookie.setHttpOnly(true); // 防止通过js获取cookie
         cookie.setMaxAge((int) (Const.REFRESH_TOKEN_EXPIRE_TIME / 1000)); // 毫秒转秒
+        cookie.setPath("/");
+        cookie.setSecure(false);
         response.addCookie(cookie);
 
         // 3. 返回登录信息

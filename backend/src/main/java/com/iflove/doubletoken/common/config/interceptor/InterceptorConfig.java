@@ -20,7 +20,7 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
 //                .order(Const.INTERCEPTOR_ORDER_FIRST)
-                .addPathPatterns("/capi/**").excludePathPatterns("/capi/**/public/**");
+                .addPathPatterns("/capi/**").excludePathPatterns("/capi/**/public/**", "/capi/user/logout");
         registry.addInterceptor(collectorInterceptor)
 //                .order(Const.INTERCEPTOR_ORDER_SECOND)
                 .addPathPatterns("/capi/**");

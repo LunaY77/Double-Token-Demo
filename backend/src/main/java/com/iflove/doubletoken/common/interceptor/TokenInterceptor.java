@@ -26,7 +26,9 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // 放行预检请求
         if (HttpMethod.OPTIONS.matches(request.getMethod())) {
+            log.debug("{}", request.getCookies());
             return true;
         }
         // 判断是否是公共方法
