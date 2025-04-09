@@ -11,6 +11,7 @@ export async function loginUser(credentials: LoginCredentials) {
         username: credentials.username,
         password: credentials.password,
       }),
+      credentials: 'include', 
     });
 
     const data = await response.json();
