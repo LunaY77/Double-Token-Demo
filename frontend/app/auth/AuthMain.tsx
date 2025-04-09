@@ -157,7 +157,7 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
         credentials: "include",
       });
 
-      if (response.ok) {
+      if (response.code === 200) {
         // 清除前端存储的 AccessToken
         localStorage.removeItem("accessToken");
         // 使 React Query 缓存失效
