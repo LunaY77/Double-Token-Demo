@@ -1,14 +1,12 @@
 import { checkAuthStatus, loginUser, registerUser } from "../utils/auth/authapi";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { queryClient } from '../routes/home';
 import { useState } from "react";
 import { useSearchParams } from "react-router";
 import { AlertMessage } from "./AlertMessage";
 import { LoggedInView } from "./LoggedInView";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
-import { fetchWithAuth } from "~/utils/auth/fetchWithAuth";
-
-const queryClient = new QueryClient();
 
 // 登录弹窗组件
 export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
@@ -152,12 +150,12 @@ export default function LoginModal({ isOpen, onClose }: { isOpen: boolean; onClo
   // 修改退出登录函数
   const handleLogout = async () => {
     try {
-      const response = await fetchWithAuth("http://localhost:8082/capi/user/logout", {
+      const response = await fetch("http://localhost:8082/capi/user/logout", {
         method: "GET",  // 改为 GET 请求
         credentials: "include",
       });
 
-      if (response.code === 200) {
+      if (response.ok) {
         // 清除前端存储的 AccessToken
         localStorage.removeItem("accessToken");
         // 使 React Query 缓存失效

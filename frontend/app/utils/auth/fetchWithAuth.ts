@@ -1,4 +1,6 @@
 import { refreshToken } from './refreshAPI';
+import { queryClient } from '../../routes/home';
+
 
 interface FetchOptions extends RequestInit {
   retry?: boolean;
@@ -36,8 +38,17 @@ export async function fetchWithAuth(url: string, options: FetchOptions = {}) {
             });
         }
       } catch (error) {
-        localStorage.removeItem('accessToken');
-        throw new Error('认证已过期，请重新登录');
+        // 清除前端存储的 AccessToken
+        localStorage.removeItem("accessToken");
+        // 使 React Query 缓存失效
+        queryClient.invalidateQueries({ queryKey: ["authStatus"] });
+        // 抛出错误
+        const authError = new Error('认证已过期，请重新登录');
+        // 延迟2秒后刷新页面
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+        throw authError;
       }
     }
 
