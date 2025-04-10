@@ -20,7 +20,7 @@ public interface UserService extends IService<User> {
     LoginInfoResponse login(UserLoginRequest userLoginRequest, HttpServletResponse response);
     
     // 修改refreshToken方法签名
-    String refreshToken(String refreshToken);
+    String refreshToken(String refreshToken, HttpServletResponse response);
 
     void logout(String refreshToken);
 }

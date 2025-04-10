@@ -39,8 +39,9 @@ public class AuthorizeController {
 
     @GetMapping("/refreshToken")
     @Operation(summary = "刷新token", description = "刷新token接口")
-    public RestBean<String> refreshToken(@CookieValue(value = Const.REFRESH_TOKEN_COOKIE_NAME) String refreshToken) {
-        return RestBean.success(userService.refreshToken(refreshToken));
+    public RestBean<String> refreshToken(@CookieValue(value = Const.REFRESH_TOKEN_COOKIE_NAME) String refreshToken,
+                                         HttpServletResponse response) {
+        return RestBean.success(userService.refreshToken(refreshToken, response));
     }
 
     @PostMapping("/register")

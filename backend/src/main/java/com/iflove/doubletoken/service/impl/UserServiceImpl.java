@@ -71,6 +71,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .userId(user.getId())
                 .build();
         // 2.1 accessToken
+        String accessToken = getAccessTokenAndRefresh(response, requestInfo);
+
+        // 3. 返回登录信息
+        return LoginInfoResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .accessToken(accessToken)
+                .build();
+    }
+
+    @Override
+    public String refreshToken(String refreshToken, HttpServletResponse response) {
+        // 1. 判断 refreshToken 是否存在
+        if (Objects.isNull(refreshToken)) {
+            throw new BusinessException(CommonErrorEnum.REFRESH_TOKEN_INVALID);
+        }
+        // 2. 从redis中获取 requestInfo
+        RequestInfo requestInfo = RedisUtils.getDel(RedisKey.getKey(RedisKey.REFRESH_TOKEN, refreshToken), RequestInfo.class);
+        // 3. 判断 requestInfo 是否存在
+        if (Objects.isNull(requestInfo)) {
+            throw new BusinessException(CommonErrorEnum.REFRESH_TOKEN_INVALID);
+        }
+        // 4. 生成新的 accessToken
+        String accessToken = getAccessTokenAndRefresh(response, requestInfo);
+        // 5. 返回新的 accessToken
+        return accessToken;
+    }
+
+    /**
+     * 生成 accessToken 和 refreshToken，并写入 redis 和 cookie
+     *
+     * @param response HttpServletResponse
+     * @param requestInfo RequestInfo
+     * @return String accessToken
+     */
+    private static String getAccessTokenAndRefresh(HttpServletResponse response, RequestInfo requestInfo) {
         String accessToken = JWTUtil.generateAccessToken(requestInfo);
         // 2.2 refreshToken
         String refreshTokenKey = String.valueOf(UUID.randomUUID());
@@ -83,30 +119,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         cookie.setPath("/");
         cookie.setSecure(false);
         response.addCookie(cookie);
-
-        // 3. 返回登录信息
-        return LoginInfoResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .accessToken(accessToken)
-                .build();
-    }
-
-    @Override
-    public String refreshToken(String refreshToken) {
-        // 1. 判断 refreshToken 是否存在
-        if (Objects.isNull(refreshToken)) {
-            throw new BusinessException(CommonErrorEnum.REFRESH_TOKEN_INVALID);
-        }
-        // 2. 从redis中获取 requestInfo
-        RequestInfo requestInfo = RedisUtils.get(RedisKey.getKey(RedisKey.REFRESH_TOKEN, refreshToken), RequestInfo.class);
-        // 3. 判断 requestInfo 是否存在
-        if (Objects.isNull(requestInfo)) {
-            throw new BusinessException(CommonErrorEnum.REFRESH_TOKEN_INVALID);
-        }
-        // 4. 生成新的 accessToken
-        String accessToken = JWTUtil.generateAccessToken(requestInfo);
-        // 5. 返回新的 accessToken
         return accessToken;
     }
 
